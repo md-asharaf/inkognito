@@ -1,47 +1,55 @@
-import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-    const token = await getToken({
-        req: request,
-        secret: process.env.NEXTAUTH_SECRET,
-        cookieName:
-            process.env.NODE_ENV === "production"
-                ? "__Secure-authjs.session-token"
-                : "authjs.session-token",
-    });
-    const url = request.nextUrl.pathname;
-    console.log({
-        token,
-    });
-    const isAuth = !!token;
-    if (
-        isAuth &&
-        (url.startsWith("/sign-in") ||
-            url.startsWith("/sign-up") ||
-            url.startsWith("/verify"))
-    ) {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-    if (!isAuth && (url.startsWith("/dashboard") || url === "/")) {
-        return NextResponse.redirect(new URL("/sign-in", request.url));
-    }
+  const { pathname } = request.nextUrl;
+
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isAuthRoute = pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
+
+  if (!isDashboard && !isAuthRoute) {
     return NextResponse.next();
+  }
+
+  const sessionCookie =
+    request.cookies.get("better-auth.session_token") ||
+    request.cookies.get("__Secure-better-auth.session_token");
+
+  let isAuth = false;
+
+  if (sessionCookie) {
+    try {
+      const response = await fetch(`${request.nextUrl.origin}/api/auth/get-session`, {
+        headers: { cookie: request.headers.get("cookie") || "" },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        isAuth = !!data?.session;
+      }
+    } catch (error) {
+      isAuth = false;
+    }
+  }
+
+  if (isAuth && isAuthRoute) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  if (!isAuth && isDashboard) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/", "/dashboard", "/sign-in", "/sign-up", "/verify"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
-
-// import { NextResponse } from 'next/server'
-// import type { NextRequest } from 'next/server'
-
-// // This function can be marked `async` if using `await` inside
-// export function middleware(request: NextRequest) {
-//   return NextResponse.redirect(new URL('/home', request.url))
-// }
-
-// // See "Matching Paths" below to learn more
-// export const config = {
-//   matcher: '/about/:path*',
-// }
