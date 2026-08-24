@@ -110,7 +110,7 @@ export default function DashBoard() {
 
   const deleteMessage = async (messageId: string) => {
     setMessages((prev) =>
-      prev.filter((message) => message.id !== messageId)
+      prev.filter((message) => message._id !== messageId || message.id !== messageId)
     );
   };
 
@@ -332,7 +332,7 @@ export default function DashBoard() {
           ) : messages?.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {messages.map((message) => (
-                <div key={message.id as string}>
+                <div key={(message._id || message.id) as string}>
                   <MessageCard
                     message={message}
                     onDelete={deleteMessage}

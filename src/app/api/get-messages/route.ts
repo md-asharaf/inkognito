@@ -27,7 +27,7 @@ export async function GET(req: Request) {
         $lookup: {
           from: "messages",
           localField: "messages",
-          foreignField: "id",
+          foreignField: "_id",
           as: "messages",
         },
       },

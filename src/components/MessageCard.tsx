@@ -26,9 +26,9 @@ interface MessageCardProps {
 const MessageCard: React.FC<MessageCardProps> = ({ message, onDelete }) => {
   const { toast } = useToast();
   const deleteMessage = async () => {
-    onDelete(message.id);
+    onDelete((message._id || message.id) as string);
     try {
-      await axios.delete(`/api/delete-message/${message.id}`);
+      await axios.delete(`/api/delete-message/${message._id || message.id}`);
       toast({
         title: "Message deleted",
         description: "Message has been deleted successfully",

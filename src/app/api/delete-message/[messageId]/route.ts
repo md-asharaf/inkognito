@@ -30,7 +30,7 @@ export async function DELETE(req: Request, { params }: { params: { messageId: st
     //delete message
     await messageModel.findByIdAndDelete(existingMessage.id);
     await userModel.findByIdAndUpdate(user.id, {
-      $pull: { messages: existingMessage.id },
+      $pull: { messages: existingMessage._id },
     })
     return Response.json(
       {

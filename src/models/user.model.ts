@@ -51,4 +51,4 @@ const UserSchema: Schema<IUser> = new Schema(
 );
 
 export default (models?.User as Model<IUser>) ||
-  model<IUser>("User", UserSchema, "user");
+  model<IUser>("User", UserSchema, "users");
