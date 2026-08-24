@@ -41,6 +41,7 @@ export default function SendMessage() {
     error: suggestError,
   } = useCompletion({
     api: "/api/suggest-messages",
+    streamProtocol: "text",
   });
 
   const submit = async (data: z.infer<typeof MessageSchema>) => {
