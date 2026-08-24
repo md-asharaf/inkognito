@@ -10,7 +10,7 @@ export interface IMessage extends Document {
 const MessageSchema: Schema<IMessage> = new Schema({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   content: {
     type: String,
@@ -18,7 +18,7 @@ const MessageSchema: Schema<IMessage> = new Schema({
   },
   createdAt: {
     type: Date,
-    default: new Date(),
+    default: Date.now,
   },
 });
 
