@@ -34,6 +34,12 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_SECRET as string,
     }
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github"],
+    },
+  },
   plugins: [nextCookies()],
   user: {
     modelName: "users",
