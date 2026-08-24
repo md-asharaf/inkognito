@@ -7,6 +7,7 @@ import { sendVerificationEmail } from "./resend";
 const client = new MongoClient(process.env.MONGODB_URI as string);
 
 export const auth = betterAuth({
+  secret: process.env.BETTER_AUTH_SECRET || "fallback_secret_for_build",
   database: mongodbAdapter(client.db()),
   emailAndPassword: {
     enabled: true,
