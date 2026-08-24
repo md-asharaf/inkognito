@@ -86,7 +86,8 @@ export default function SendMessage() {
 
   const fetchSuggestedMessages = async () => {
     try {
-      await complete("");
+      const currentTitle = form.getValues("title");
+      await complete(currentTitle || "");
     } catch (error) {
     }
   };

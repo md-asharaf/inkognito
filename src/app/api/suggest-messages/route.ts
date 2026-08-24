@@ -1,17 +1,18 @@
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 
-export const runtime = "edge";
-
 export async function POST(req: Request) {
   try {
+    const body = await req.json();
+    const titleContext = body.prompt ? ` Make the questions related to this topic/title: "${body.prompt}".` : "";
     const prompt =
-      "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction. For example, your output should be structured like this: 'What’s a hobby you’ve recently started?||If you could have dinner with any historical figure, who would it be?||What’s a simple thing that makes you happy?'. Ensure the questions are intriguing, foster curiosity, and contribute to a positive and welcoming conversational environment.";
+      `Create a list of three open-ended and engaging questions formatted as a single string. Each question MUST be separated by '||'. DO NOT include any other text, markdown, or bullet points. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics.${titleContext} For example, your output must look exactly like this: 'What’s a hobby you’ve recently started?||If you could have dinner with any historical figure, who would it be?||What’s a simple thing that makes you happy?'`;
 
+    const modelName = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
     const result = streamText({
-      model: google('models/gemini-1.5-flash'),
+      model: google(modelName),
       maxOutputTokens: 400,
-      system: "You are a creative assistant that generates engaging questions for an anonymous messaging platform.",
+      system: "You are an API that ONLY outputs exactly three questions separated by '||'. NO markdown, NO bullet points, NO extra text. Example format: 'Question 1?||Question 2?||Question 3?'",
       prompt: prompt,
     });
 
