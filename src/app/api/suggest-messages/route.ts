@@ -1,6 +1,8 @@
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 
+export const runtime = 'edge';
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
