@@ -5,7 +5,7 @@ import { nextCookies } from "better-auth/next-js";
 import { sendVerificationEmail } from "./resend";
 
 const globalForMongo = globalThis as unknown as { _mongoClient?: MongoClient };
-const client = globalForMongo._mongoClient || new MongoClient(process.env.MONGODB_URI || "mongodb://localhost:27017/mystery-message");
+const client = globalForMongo._mongoClient || new MongoClient(process.env.MONGODB_URI || "mongodb://localhost:27017/inkognito");
 if (process.env.NODE_ENV !== "production") globalForMongo._mongoClient = client;
 
 export const auth = betterAuth({

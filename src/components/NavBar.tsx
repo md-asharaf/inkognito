@@ -5,8 +5,9 @@ import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "./ui/use-toast";
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, User as UserIcon } from "lucide-react";
 import { User } from "better-auth";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function NavBar({ initialUser }: { initialUser?: User }) {
   const router = useRouter();
@@ -51,14 +52,27 @@ export default function NavBar({ initialUser }: { initialUser?: User }) {
           {(isPending && !user) ? (
             <div className="w-[72px] h-8 rounded-md bg-muted/60 animate-pulse"></div>
           ) : user ? (
-            <Button
-              onClick={signout}
-              variant="secondary"
-              size="sm"
-              className="font-medium"
-            >
-              Sign out
-            </Button>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-muted/50 rounded-full pr-3 pl-1 py-1 border border-border/50">
+                <Avatar className="w-7 h-7">
+                  <AvatarImage src={user.image || ""} alt={user.name || "User"} />
+                  <AvatarFallback className="bg-primary/10">
+                    <UserIcon className="w-4 h-4 text-primary" />
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium hidden sm:inline-block max-w-[100px] truncate text-muted-foreground">
+                  {user.name || (user as any).username || "User"}
+                </span>
+              </div>
+              <Button
+                onClick={signout}
+                variant="secondary"
+                size="sm"
+                className="font-medium"
+              >
+                Sign out
+              </Button>
+            </div>
           ) : (
             <Link href="/sign-in">
               <Button

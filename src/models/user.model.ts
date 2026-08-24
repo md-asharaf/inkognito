@@ -1,19 +1,27 @@
 import { Schema, Document, model, models, Model } from "mongoose";
 
 export interface IUser extends Document {
+  name?: string;
+  image?: string;
+  emailVerified?: boolean;
   username: string;
   email: string;
-  password: string;
-  verifyCode: string;
-  verifyCodeExpires: Date;
+  password?: string;
+  verifyCode?: string;
+  verifyCodeExpires?: Date;
   isVerified: boolean;
   isAcceptingMessages: boolean;
   messages: Schema.Types.ObjectId[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const UserSchema: Schema<IUser> = new Schema(
   {
     _id: { type: String },
+    name: { type: String },
+    image: { type: String },
+    emailVerified: { type: Boolean },
     username: {
       type: String,
       required: [true, "Please fill a valid username"],
