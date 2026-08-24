@@ -13,6 +13,10 @@ import { AcceptMessageSchema } from "@/validation/AcceptMessageSchema";
 import { ApiResponse } from "@/types/ApiResponse";
 import { toast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 import { useDebounceCallback } from "usehooks-ts";
 import { useSession } from "@/lib/auth-client";
 
@@ -221,112 +225,118 @@ export default function DashBoard() {
         </div>
 
         {/* Profile Link Card */}
-        <div className="bg-card/50 backdrop-blur border border-border/50 rounded-3xl p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold flex items-center">
-              Your Unique Link
-              <Badge variant="secondary" className="ml-3 font-normal text-xs bg-primary/10 text-primary hover:bg-primary/20">Public</Badge>
-            </h2>
-            {!isEditingUsername && (
-              <Button variant="ghost" size="sm" onClick={() => setIsEditingUsername(true)} className="text-muted-foreground hover:text-primary mt-2 md:mt-0 w-fit">
-                <Edit2 className="w-4 h-4 mr-2" /> Change Username
-              </Button>
-            )}
-          </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Share this link on your social profiles to start receiving anonymous feedback.
-          </p>
-
-          {isEditingUsername ? (
-            <div className="space-y-3 animate-in fade-in zoom-in-95 duration-200">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-grow flex items-center bg-background border border-primary/50 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary/20">
-                  <span className="pl-3 text-muted-foreground text-sm">/u/</span>
-                  <input
-                    type="text"
-                    defaultValue={user?.username}
-                    onChange={(e) => debouncedUsername(e.target.value)}
-                    className="w-full p-3 bg-transparent text-sm md:text-base focus:outline-none transition-all text-foreground font-medium"
-                    placeholder="New username"
-                  />
+        <Card className="bg-card/50 backdrop-blur border-border/50 rounded-3xl shadow-sm">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
+              <CardTitle className="text-lg font-semibold flex items-center">
+                Your Unique Link
+                <Badge variant="secondary" className="ml-3 font-normal text-xs bg-primary/10 text-primary hover:bg-primary/20">Public</Badge>
+              </CardTitle>
+              {!isEditingUsername && (
+                <Button variant="ghost" size="sm" onClick={() => setIsEditingUsername(true)} className="text-muted-foreground hover:text-primary mt-2 md:mt-0 w-fit">
+                  <Edit2 className="w-4 h-4 mr-2" /> Change Username
+                </Button>
+              )}
+            </div>
+            <CardDescription>
+              Share this link on your social profiles to start receiving anonymous feedback.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {isEditingUsername ? (
+              <div className="space-y-3 animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="flex-grow flex items-center bg-background border border-input rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                    <span className="pl-3 text-muted-foreground text-sm whitespace-nowrap">/u/</span>
+                    <Input
+                      type="text"
+                      defaultValue={user?.username}
+                      onChange={(e) => debouncedUsername(e.target.value)}
+                      className="w-full border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent text-sm md:text-base transition-all text-foreground font-medium rounded-none"
+                      placeholder="New username"
+                    />
+                  </div>
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    <Button
+                      onClick={handleUpdateUsername}
+                      disabled={isUpdatingUsername || isCheckingUsername || (usernameMessage !== "username is unique" && newUsername !== user?.username)}
+                      className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      {isUpdatingUsername ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 mr-1" />}
+                      Save
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setIsEditingUsername(false);
+                        setNewUsername(user?.username || "");
+                        setUsernameMessage("");
+                      }}
+                      className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium border-border/50"
+                    >
+                      <X className="w-4 h-4 mr-1" />
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-2 w-full sm:w-auto">
-                  <Button
-                    onClick={handleUpdateUsername}
-                    disabled={isUpdatingUsername || isCheckingUsername || (usernameMessage !== "username is unique" && newUsername !== user?.username)}
-                    className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium bg-green-600 hover:bg-green-700 text-white"
-                  >
-                    {isUpdatingUsername ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 mr-1" />}
-                    Save
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setIsEditingUsername(false);
-                      setNewUsername(user?.username || "");
-                      setUsernameMessage("");
-                    }}
-                    className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium border-border/50"
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Cancel
-                  </Button>
-                </div>
+                {isCheckingUsername && (
+                  <div className="flex items-center text-xs text-muted-foreground">
+                    <Loader2 className="w-3 h-3 animate-spin mr-1" /> Checking availability...
+                  </div>
+                )}
+                {!isCheckingUsername && usernameMessage && newUsername !== user?.username && (
+                  <p className={`text-xs ${usernameMessage === "username is unique" ? "text-green-500" : "text-destructive"}`}>
+                    {usernameMessage}
+                  </p>
+                )}
               </div>
-              {isCheckingUsername && (
-                <div className="flex items-center text-xs text-muted-foreground">
-                  <Loader2 className="w-3 h-3 animate-spin mr-1" /> Checking availability...
-                </div>
-              )}
-              {!isCheckingUsername && usernameMessage && newUsername !== user?.username && (
-                <p className={`text-xs ${usernameMessage === "username is unique" ? "text-green-500" : "text-destructive"}`}>
-                  {usernameMessage}
-                </p>
-              )}
-            </div>
-          ) : (
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                ref={inputRef}
-                value={uniqueLink}
-                readOnly
-                type="text"
-                className="flex-grow p-3 bg-background border border-border rounded-xl text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-muted-foreground"
-              />
-              <Button
-                onClick={copyToClipboard}
-                className="w-full sm:w-auto px-8 h-[50px] rounded-xl font-medium shadow-md"
-              >
-                Copy Link
-              </Button>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Input
+                  ref={inputRef}
+                  value={uniqueLink}
+                  readOnly
+                  type="text"
+                  className="flex-grow h-[50px] bg-background border-border rounded-xl text-sm md:text-base transition-all text-muted-foreground font-medium"
+                />
+                <Button
+                  onClick={copyToClipboard}
+                  className="w-full sm:w-auto px-8 h-[50px] rounded-xl font-medium shadow-md"
+                >
+                  Copy Link
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Messages Section */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between border-b border-border/50 pb-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-xl font-bold tracking-tight">Your Messages</h2>
-              <Badge className="bg-primary text-primary-foreground">{messages?.length || 0}</Badge>
+        <div className="space-y-6 mt-8">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <h2 className="text-xl font-bold tracking-tight">Your Messages</h2>
+                <Badge className="bg-primary text-primary-foreground">{messages?.length || 0}</Badge>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                className="rounded-full px-4 border-border/50 hover:bg-muted"
+              >
+                <RefreshCw
+                  className={`${isFetching ? "animate-spin text-primary" : ""} w-4 h-4 mr-2`}
+                />
+                Refresh
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => refetch()}
-              className="rounded-full px-4 border-border/50 hover:bg-muted"
-            >
-              <RefreshCw
-                className={`${isFetching ? "animate-spin text-primary" : ""} w-4 h-4 mr-2`}
-              />
-              Refresh
-            </Button>
+            <Separator className="bg-border/50" />
           </div>
 
           {isFetching && messages?.length === 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-40 bg-card/30 border border-border/30 rounded-2xl animate-pulse" />
+                <Skeleton key={i} className="h-40 w-full rounded-2xl bg-card/30 border border-border/30" />
               ))}
             </div>
           ) : messages?.length > 0 ? (
@@ -341,12 +351,14 @@ export default function DashBoard() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-20 text-center bg-card/30 border border-border/30 rounded-3xl border-dashed">
-              <h3 className="text-lg font-semibold">No messages yet</h3>
-              <p className="text-muted-foreground mt-1 max-w-sm">
-                Share your link to start receiving anonymous messages. They will appear here.
-              </p>
-            </div>
+            <Card className="flex flex-col items-center justify-center py-20 text-center bg-card/30 border-dashed rounded-3xl shadow-none">
+              <CardHeader>
+                <CardTitle className="text-lg font-semibold">No messages yet</CardTitle>
+                <CardDescription className="max-w-sm mt-1">
+                  Share your link to start receiving anonymous messages. They will appear here.
+                </CardDescription>
+              </CardHeader>
+            </Card>
           )}
         </div>
 

@@ -56,7 +56,7 @@ export const auth = betterAuth({
         before: async (user) => {
           if (!user.username) {
             const baseUsername = user.email ? user.email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "") : `user${Math.random().toString(36).substring(2, 7)}`;
-            user.username = `${baseUsername}_${Math.floor(Math.random() * 10)}`;
+            user.username = `${baseUsername}_0${Math.floor(Math.random() * 10)}`;
           }
           return { data: user };
         },

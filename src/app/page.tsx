@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { MessageSquare, ShieldCheck, Sparkles, ArrowRight } from "lucide-react";
 
 export default function Home() {
@@ -41,35 +42,41 @@ export default function Home() {
 
             {/* Feature Showcase Grid */}
             <section className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-                <div className="flex flex-col items-center text-center p-8 rounded-3xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="p-4 bg-primary/10 rounded-2xl mb-6 text-primary">
-                        <ShieldCheck className="h-10 w-10" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">100% Anonymous</h3>
-                    <p className="text-muted-foreground">
-                        Your identity remains completely hidden. We focus on the message, not the messenger.
-                    </p>
-                </div>
+                <Card className="flex flex-col items-center text-center border-border/50 shadow-sm hover:shadow-md transition-shadow rounded-3xl">
+                    <CardContent className="pt-8 pb-8 px-8">
+                        <div className="flex justify-center p-4 bg-primary/10 rounded-2xl mb-6 text-primary w-fit mx-auto">
+                            <ShieldCheck className="h-10 w-10" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-3">100% Anonymous</h3>
+                        <p className="text-muted-foreground">
+                            Your identity remains completely hidden. We focus on the message, not the messenger.
+                        </p>
+                    </CardContent>
+                </Card>
 
-                <div className="flex flex-col items-center text-center p-8 rounded-3xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="p-4 bg-blue-500/10 rounded-2xl mb-6 text-blue-500">
-                        <MessageSquare className="h-10 w-10" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">Share Anywhere</h3>
-                    <p className="text-muted-foreground">
-                        Post your unique link on Instagram, Twitter, or send it directly to your team.
-                    </p>
-                </div>
+                <Card className="flex flex-col items-center text-center border-border/50 shadow-sm hover:shadow-md transition-shadow rounded-3xl">
+                    <CardContent className="pt-8 pb-8 px-8">
+                        <div className="flex justify-center p-4 bg-blue-500/10 rounded-2xl mb-6 text-blue-500 w-fit mx-auto">
+                            <MessageSquare className="h-10 w-10" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-3">Share Anywhere</h3>
+                        <p className="text-muted-foreground">
+                            Post your unique link on Instagram, Twitter, or send it directly to your team.
+                        </p>
+                    </CardContent>
+                </Card>
 
-                <div className="flex flex-col items-center text-center p-8 rounded-3xl bg-card border border-border/50 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="p-4 bg-violet-500/10 rounded-2xl mb-6 text-violet-500">
-                        <Sparkles className="h-10 w-10" />
-                    </div>
-                    <h3 className="text-xl font-bold mb-3">AI Suggestions</h3>
-                    <p className="text-muted-foreground">
-                        Writer&apos;s block? Use our AI to suggest engaging and fun questions to ask.
-                    </p>
-                </div>
+                <Card className="flex flex-col items-center text-center border-border/50 shadow-sm hover:shadow-md transition-shadow rounded-3xl">
+                    <CardContent className="pt-8 pb-8 px-8">
+                        <div className="flex justify-center p-4 bg-violet-500/10 rounded-2xl mb-6 text-violet-500 w-fit mx-auto">
+                            <Sparkles className="h-10 w-10" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-3">AI Suggestions</h3>
+                        <p className="text-muted-foreground">
+                            Writer&apos;s block? Use our AI to suggest engaging and fun questions to ask.
+                        </p>
+                    </CardContent>
+                </Card>
             </section>
 
             {/* Simulated Messages / Testimonials */}
@@ -78,31 +85,35 @@ export default function Home() {
                 <h2 className="text-3xl font-bold mb-10">See it in action</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-                    <div className="p-6 rounded-2xl bg-card/80 backdrop-blur border border-border/50 hover:bg-card transition-colors">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                                <MessageSquare className="h-5 w-5 text-white" />
+                    <Card className="rounded-2xl bg-card/80 backdrop-blur border-border/50 hover:bg-card transition-colors shadow-none">
+                        <CardContent className="p-6">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                                    <MessageSquare className="h-5 w-5 text-white" />
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-sm">Anonymous</p>
+                                    <p className="text-xs text-muted-foreground">Just now</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-semibold text-sm">Anonymous</p>
-                                <p className="text-xs text-muted-foreground">Just now</p>
-                            </div>
-                        </div>
-                        <p className="text-foreground">&quot;Your latest project looks amazing! Keep up the great work.&quot;</p>
-                    </div>
+                            <p className="text-foreground">&quot;Your latest project looks amazing! Keep up the great work.&quot;</p>
+                        </CardContent>
+                    </Card>
 
-                    <div className="p-6 rounded-2xl bg-card/80 backdrop-blur border border-border/50 hover:bg-card transition-colors translate-y-0 md:translate-y-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 flex items-center justify-center">
-                                <MessageSquare className="h-5 w-5 text-white" />
+                    <Card className="rounded-2xl bg-card/80 backdrop-blur border-border/50 hover:bg-card transition-colors translate-y-0 md:translate-y-6 shadow-none">
+                        <CardContent className="p-6">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 flex items-center justify-center">
+                                    <MessageSquare className="h-5 w-5 text-white" />
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-sm">Anonymous</p>
+                                    <p className="text-xs text-muted-foreground">2 hours ago</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-semibold text-sm">Anonymous</p>
-                                <p className="text-xs text-muted-foreground">2 hours ago</p>
-                            </div>
-                        </div>
-                        <p className="text-foreground">&quot;What&apos;s your biggest advice for someone learning Next.js?&quot;</p>
-                    </div>
+                            <p className="text-foreground">&quot;What&apos;s your biggest advice for someone learning Next.js?&quot;</p>
+                        </CardContent>
+                    </Card>
                 </div>
             </section>
         </main>

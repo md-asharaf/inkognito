@@ -33,9 +33,10 @@ export async function POST(req: Request) {
       content,
       title
     });
-    existingUser.messages.push(newMessage.id as ObjectId);
 
-    await existingUser.save();
+    await userModel.findByIdAndUpdate(existingUser._id, {
+      $push: { messages: newMessage._id }
+    });
 
     return Response.json(
       {
@@ -45,6 +46,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
+    console.error("Error sending message:", error);
     return Response.json(
       {
         success: false,
