@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import messageModel from "@/models/message.model";
 import { auth } from "@/lib/auth";
 import userModel from "@/models/user.model";
+import { logger } from "@/lib/logger";
 
 export async function DELETE(req: Request, { params }: { params: { messageId: string } }) {
   await dbConnect();
@@ -28,7 +29,7 @@ export async function DELETE(req: Request, { params }: { params: { messageId: st
       );
     }
     //delete message
-    await messageModel.findByIdAndDelete(existingMessage.id);
+    await messageModel.findByIdAndDelete(existingMessage._id);
     await userModel.findByIdAndUpdate(user.id, {
       $pull: { messages: existingMessage._id },
     })
@@ -42,6 +43,7 @@ export async function DELETE(req: Request, { params }: { params: { messageId: st
       }
     );
   } catch (error) {
+    logger.error({ error }, "Error in delete-message route");
     return Response.json(
       {
         message: "An error occurred",

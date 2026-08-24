@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/user.model";
 import { UsernameSchema } from "@/validation/signUpSchema";
+import { logger } from "@/lib/logger";
 export const dynamic = "force-dynamic";
 export async function GET(req: Request) {
     await dbConnect();
@@ -34,7 +35,7 @@ export async function GET(req: Request) {
             { status: 200 }
         );
     } catch (error) {
-        console.log("Error checking username availability: ", error);
+        logger.error({ error }, "Error checking username availability");
         return Response.json(
             { success: false, message: "Error checking username availability" },
             { status: 500 }

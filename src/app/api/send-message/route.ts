@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/user.model";
 import messageModel from "@/models/message.model";
-import { ObjectId } from "mongoose";
+import { logger } from "@/lib/logger";
 export async function POST(req: Request) {
   await dbConnect();
   const { title, content, username } =
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error sending message:", error);
+    logger.error({ error }, "Error sending message");
     return Response.json(
       {
         success: false,

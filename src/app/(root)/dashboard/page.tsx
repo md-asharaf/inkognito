@@ -114,20 +114,16 @@ export default function DashBoard() {
 
   const deleteMessage = async (messageId: string) => {
     setMessages((prev) =>
-      prev.filter((message) => message._id !== messageId || message.id !== messageId)
+      prev.filter((message) => message._id !== messageId && message.id !== messageId)
     );
   };
 
   const fetchMessages = async () => {
     try {
       const response = await axios.get("/api/get-messages");
-      setMessages(response.data?.messages);
-      return response.data?.messages;
+      setMessages(response.data?.messages ?? []);
+      return response.data?.messages ?? [];
     } catch (error: any) {
-      console.log(
-        "error fetching messages: ",
-        error.response?.data.message
-      );
       return error;
     }
   };
@@ -147,8 +143,6 @@ export default function DashBoard() {
           "Failed to fetch message settings",
         variant: "destructive",
       });
-    } finally {
-      return null;
     }
   };
 

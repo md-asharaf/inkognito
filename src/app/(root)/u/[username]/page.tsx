@@ -26,7 +26,8 @@ import { useCompletion } from "@ai-sdk/react";
 
 export default function SendMessage() {
   const [isUserAcceptingMessages, setIsUserAcceptingMessages] = useState(false);
-  const { username } = useParams();
+  const { username: usernameParam } = useParams();
+  const username = Array.isArray(usernameParam) ? usernameParam[0] : usernameParam;
   const [isLoading, setIsLoading] = useState(true);
 
   const form = useForm<z.infer<typeof MessageSchema>>({
@@ -74,7 +75,6 @@ export default function SendMessage() {
         const res = await axios.get(`/api/check-user-status?username=${username}`);
         setIsUserAcceptingMessages(res.data?.isAcceptingMessages);
       } catch (error: any) {
-        console.error("Error checking status: ", error.message);
         setIsUserAcceptingMessages(false);
       } finally {
         setIsLoading(false);
@@ -88,7 +88,6 @@ export default function SendMessage() {
     try {
       await complete("");
     } catch (error) {
-      console.error("Error fetching suggestions:", error);
     }
   };
 
@@ -130,7 +129,7 @@ export default function SendMessage() {
           <Card className="bg-card/50 backdrop-blur border-border/50 rounded-3xl shadow-xl relative overflow-hidden">
             {/* Decorative background glow */}
             <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-primary/20 blur-3xl rounded-full pointer-events-none" />
-            
+
             <CardContent className="p-6 md:p-8 pt-6 md:pt-8 relative z-10">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit((data) => handleSubmit(data))} className="space-y-6">

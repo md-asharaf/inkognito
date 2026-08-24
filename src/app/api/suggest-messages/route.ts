@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     return result.toTextStreamResponse();
   } catch (error: any) {
-    console.error("An unexpected error occurred:", error);
+    console.error("An unexpected error occurred in suggest-messages:", error);
     return new Response("An unexpected error occurred", { status: 500 });
   }
 }

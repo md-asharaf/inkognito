@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import { auth } from "@/lib/auth";
 import userModel from "@/models/user.model";
 import mongoose from "mongoose";
+import { logger } from "@/lib/logger";
 export async function GET(req: Request) {
   await dbConnect();
   const session = await auth.api.getSession({ headers: req.headers });
@@ -17,10 +18,7 @@ export async function GET(req: Request) {
     const foundUser = await userModel.aggregate([
       {
         $match: {
-          $or: [
-            { _id: userId },
-            { _id: mongoose.Types.ObjectId.isValid(userId) ? new mongoose.Types.ObjectId(userId) : null }
-          ]
+          _id: mongoose.Types.ObjectId.isValid(userId) ? new mongoose.Types.ObjectId(userId) : userId
         },
       },
       {
@@ -65,7 +63,7 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("GET Error in get-messages route: ", error);
+    logger.error({ error }, "GET Error in get-messages route");
     return Response.json(
       { success: false, message: "Internal server error" },
       { status: 500 }

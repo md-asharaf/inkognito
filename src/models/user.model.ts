@@ -18,7 +18,6 @@ export interface IUser extends Document {
 
 const UserSchema: Schema<IUser> = new Schema(
   {
-    _id: { type: String },
     name: { type: String },
     image: { type: String },
     emailVerified: { type: Boolean },
@@ -55,7 +54,6 @@ const UserSchema: Schema<IUser> = new Schema(
     },
     messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
   },
-  { _id: false }
 );
 
 export default (models?.User as Model<IUser>) ||

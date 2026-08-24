@@ -41,24 +41,30 @@ export default function SignUp() {
     },
   });
 
-  const checkUsername = async () => {
+  const checkUsername = async (signal?: AbortSignal) => {
+    if (!username) {
+      setUserMessage("");
+      setIsCheckingUsername(false);
+      return;
+    }
     setIsCheckingUsername(true);
     setUserMessage("");
-    if (username) {
-      try {
-        const response = await axios.get(
-          `/api/unique-user?username=${username}`
-        );
-        setUserMessage(response.data?.message || "");
-      } catch (error: any) {
-        if (error instanceof AxiosError) {
-          setUserMessage(error.response?.data?.message);
-        } else {
-          setUserMessage(error?.message);
-        }
+    try {
+      const response = await axios.get(
+        `/api/unique-user?username=${username}`,
+        { signal }
+      );
+      setUserMessage(response.data?.message || "");
+    } catch (error: any) {
+      if (axios.isCancel(error)) return; // ignore stale aborted request
+      if (error instanceof AxiosError) {
+        setUserMessage(error.response?.data?.message || "");
+      } else {
+        setUserMessage(error?.message || "");
       }
+    } finally {
+      setIsCheckingUsername(false);
     }
-    setIsCheckingUsername(false);
   };
 
   const { mutate: onSubmit, isPending: isSubmitting } = useMutation({
@@ -90,7 +96,9 @@ export default function SignUp() {
   });
 
   useEffect(() => {
-    checkUsername();
+    const controller = new AbortController();
+    checkUsername(controller.signal);
+    return () => controller.abort(); // cancel on re-render (stale request cleanup)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [username]);
 

@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/user.model";
 import { AcceptMessageSchema } from "@/validation/AcceptMessageSchema";
-import mongoose from "mongoose";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: Request) {
   await dbConnect();
@@ -28,13 +28,8 @@ export async function POST(req: Request) {
     );
   }
   try {
-    const updatedUser = await userModel.findOneAndUpdate(
-      {
-        $or: [
-          { _id: userId },
-          { _id: mongoose.Types.ObjectId.isValid(userId) ? new mongoose.Types.ObjectId(userId) : null }
-        ]
-      },
+    const updatedUser = await userModel.findByIdAndUpdate(
+      userId,
       {
         isAcceptingMessages: result.data.acceptMessage,
       },
@@ -59,7 +54,7 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("POST Error in accept-message route: ", error);
+    logger.error({ error }, "POST Error in accept-message route");
     return Response.json(
       {
         success: false,
@@ -82,12 +77,7 @@ export async function GET(req: Request) {
   }
   const userId = user.id;
   try {
-    const user = await userModel.findOne({
-      $or: [
-        { _id: userId },
-        { _id: mongoose.Types.ObjectId.isValid(userId) ? new mongoose.Types.ObjectId(userId) : null }
-      ]
-    });
+    const user = await userModel.findById(userId);
     if (!user) {
       return Response.json(
         {
@@ -106,7 +96,7 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("GET Error in accept-message route: ", error);
+    logger.error({ error }, "GET Error in accept-message route");
     return Response.json(
       {
         success: false,

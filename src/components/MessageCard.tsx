@@ -39,7 +39,6 @@ const MessageCard: React.FC<MessageCardProps> = ({ message, onDelete }) => {
         title: "Error",
         description: axiosError.response?.data.message,
       });
-      console.log("Error deleting message: ", error);
     }
   };
   return (

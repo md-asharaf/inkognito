@@ -55,8 +55,7 @@ export default function SignIn() {
           }
         }
       });
-    } catch (error: any) {
-      console.log("ERROR: ", error);
+    } catch (error) {
     } finally {
       setIsSubmitting(false);
     }
@@ -82,7 +81,7 @@ export default function SignIn() {
             </div>
           )}
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <Button

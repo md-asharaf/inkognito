@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import userModel from "@/models/user.model";
+import { logger } from "@/lib/logger";
 
 export const dynamic = 'force-dynamic';
 
@@ -33,7 +34,7 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in check-user-status:", error);
+    logger.error({ error }, "Error in check-user-status");
     return Response.json(
       { success: false, message: "Internal server error" },
       { status: 500 }

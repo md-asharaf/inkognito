@@ -3,7 +3,7 @@ import userModel from "@/models/user.model";
 import { auth } from "@/lib/auth";
 import { UsernameSchema } from "@/validation/signUpSchema";
 import * as z from "zod";
-import mongoose from "mongoose";
+import { logger } from "@/lib/logger";
 
 const ChangeUsernameSchema = z.object({
   username: UsernameSchema
@@ -31,14 +31,8 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ success: false, message: "Username is already taken" }), { status: 400 });
     }
 
-    // Update the user
-    const updatedUser = await userModel.findOneAndUpdate(
-      {
-        $or: [
-          { _id: session.user.id },
-          { _id: mongoose.Types.ObjectId.isValid(session.user.id) ? new mongoose.Types.ObjectId(session.user.id) : null }
-        ]
-      },
+    const updatedUser = await userModel.findByIdAndUpdate(
+      session.user.id,
       { username },
       { new: true }
     );
@@ -50,7 +44,7 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ success: true, message: "Username updated successfully" }), { status: 200 });
 
   } catch (error) {
-    console.error("Error updating username", error);
+    logger.error({ error }, "Error updating username");
     return new Response(JSON.stringify({ success: false, message: "Error updating username" }), { status: 500 });
   }
 }
