@@ -4,7 +4,9 @@ type ConnectionObject = {
   isConnected?: number;
 };
 
-const connection: ConnectionObject = {};
+const globalForMongoose = globalThis as unknown as { _mongooseConnection?: ConnectionObject };
+const connection: ConnectionObject = globalForMongoose._mongooseConnection || {};
+if (process.env.NODE_ENV !== "production") globalForMongoose._mongooseConnection = connection;
 
 async function dbConnect(): Promise<void> {
   if (connection.isConnected) {
@@ -17,7 +19,7 @@ async function dbConnect(): Promise<void> {
     console.log("Connected to MongoDB successfully");
   } catch (error: any) {
     console.log("Error connecting to MongoDB", error.message);
-    process.exit(1);
+    throw new Error("Failed to connect to database");
   }
 }
 

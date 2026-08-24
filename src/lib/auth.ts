@@ -4,7 +4,9 @@ import { MongoClient } from "mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { sendVerificationEmail } from "./resend";
 
-const client = new MongoClient(process.env.MONGODB_URI as string);
+const globalForMongo = globalThis as unknown as { _mongoClient?: MongoClient };
+const client = globalForMongo._mongoClient || new MongoClient(process.env.MONGODB_URI || "mongodb://localhost:27017/mystery-message");
+if (process.env.NODE_ENV !== "production") globalForMongo._mongoClient = client;
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET || "fallback_secret_for_build",
