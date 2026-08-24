@@ -5,6 +5,8 @@ import { Inter } from "next/font/google";
 import NavBar from "@/components/NavBar";
 import Provider from "@/context/Providers";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,11 +26,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth.api.getSession({ headers: headers() });
+  const user = session?.user || undefined;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <Provider>
@@ -40,7 +45,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="h-[52px] sm:h-[68px]">
-              <NavBar />
+              <NavBar initialUser={user} />
             </div>
             {children}
             <footer className="h-[24px] sm:h-[40px]">

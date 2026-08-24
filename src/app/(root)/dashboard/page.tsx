@@ -221,7 +221,7 @@ export default function DashBoard() {
         </div>
 
         {/* Profile Link Card */}
-        <div className="bg-card/50 backdrop-blur border border-border/50 rounded-3xl p-6 md:p-8 shadow-sm">
+        <div className="bg-card/50 backdrop-blur border border-border/50 rounded-3xl p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
             <h2 className="text-lg font-semibold flex items-center">
               Your Unique Link
@@ -254,7 +254,7 @@ export default function DashBoard() {
                   <Button
                     onClick={handleUpdateUsername}
                     disabled={isUpdatingUsername || isCheckingUsername || (usernameMessage !== "username is unique" && newUsername !== user?.username)}
-                    className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium shadow-md bg-green-600 hover:bg-green-700 text-white"
+                    className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium bg-green-600 hover:bg-green-700 text-white"
                   >
                     {isUpdatingUsername ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4 mr-1" />}
                     Save
@@ -266,7 +266,7 @@ export default function DashBoard() {
                       setNewUsername(user?.username || "");
                       setUsernameMessage("");
                     }}
-                    className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium shadow-md border-border/50"
+                    className="flex-1 sm:flex-none h-[50px] rounded-xl font-medium border-border/50"
                   >
                     <X className="w-4 h-4 mr-1" />
                     Cancel
@@ -342,9 +342,6 @@ export default function DashBoard() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-20 text-center bg-card/30 border border-border/30 rounded-3xl border-dashed">
-              <div className="p-4 bg-muted/50 rounded-full mb-4">
-                <RefreshCw className="w-8 h-8 text-muted-foreground" />
-              </div>
               <h3 className="text-lg font-semibold">No messages yet</h3>
               <p className="text-muted-foreground mt-1 max-w-sm">
                 Share your link to start receiving anonymous messages. They will appear here.

@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/dbConnect";
 import { auth } from "@/lib/auth";
 import userModel from "@/models/user.model";
-
+import mongoose from "mongoose";
 export async function GET(req: Request) {
   await dbConnect();
   const session = await auth.api.getSession({ headers: req.headers });

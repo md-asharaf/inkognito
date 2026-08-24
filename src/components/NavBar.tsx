@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "./ui/use-toast";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
+import { User } from "better-auth";
 
-export default function NavBar() {
+export default function NavBar({ initialUser }: { initialUser?: User }) {
   const router = useRouter();
   const { data, isPending } = useSession();
-  const user = data?.user;
+  const user = data?.user || initialUser;
   const { theme, setTheme } = useTheme();
 
   const signout = async () => {
@@ -47,7 +48,7 @@ export default function NavBar() {
             <span className="sr-only">Toggle theme</span>
           </Button>
 
-          {isPending ? (
+          {(isPending && !user) ? (
             <div className="w-[72px] h-8 rounded-md bg-muted/60 animate-pulse"></div>
           ) : user ? (
             <Button
